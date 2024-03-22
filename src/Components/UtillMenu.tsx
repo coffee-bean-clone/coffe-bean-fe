@@ -13,9 +13,6 @@ const UtillMenu = () => {
           <Menu to="/heavybuying">단체 및 기업구매</Menu>
           <Menu to="/service">고객 서비스</Menu>
         </List>
-        <CoffeebeanIcon>
-          <img src="src/assets/img/coffeebean_icon.png" />
-        </CoffeebeanIcon>
       </Lists>
     </UtillHeader>
   );
@@ -33,6 +30,7 @@ const Lists = styled.ul`
   display: flex;
   float: right;
   margin-right: 5%;
+  align-items: center;
 `;
 
 const List = styled.li`
@@ -46,13 +44,14 @@ const Menu = styled(Link)`
   padding-right: 15px;
 `;
 
-const CoffeebeanIcon = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  background-color: #401700;
-`;
+// const CoffeebeanIcon = styled.img`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   width: 30px;
+//   height: 30px;
+//   background-color: #401700;
+// `;
 
 export default UtillMenu;

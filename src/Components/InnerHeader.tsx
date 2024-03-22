@@ -1,10 +1,12 @@
 import styled from 'styled-components';
+import { BiSolidCoffeeBean } from 'react-icons/bi';
+import { FaSearch } from 'react-icons/fa';
 
 const InnerHeader = () => {
   return (
     <InnerMenu>
       <Inner>
-        <Logo>이미지</Logo>
+        <BiSolidCoffeeBean size={20} />
         <Menus>
           <ul>
             <Menu href="">BUY ONLINE</Menu>
@@ -22,7 +24,7 @@ const InnerHeader = () => {
             <Menu href="">THE COFFEE BEAN</Menu>
           </ul>
         </Menus>
-        <Search>검색</Search>
+        <FaSearch />
       </Inner>
     </InnerMenu>
   );
@@ -41,9 +43,8 @@ const Inner = styled.div`
   justify-content: center;
   width: 90%;
   margin: 0 auto;
+  align-items: center;
 `;
-
-const Logo = styled.div``;
 
 const Menus = styled.div`
   display: flex;
@@ -56,7 +57,5 @@ const Menu = styled.a`
   text-decoration: none;
   font-weight: bold;
 `;
-
-const Search = styled.div``;
 
 export default InnerHeader;

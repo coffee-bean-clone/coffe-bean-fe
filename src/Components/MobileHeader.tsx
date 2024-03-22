@@ -1,17 +1,20 @@
 import styled from 'styled-components';
+import { TiThMenu } from 'react-icons/ti';
+import { FaShoppingCart } from 'react-icons/fa';
 
 const MobileHeader = () => {
   return (
     <Header>
-      <img src="src/assets/img/btn_menu.svg" />
-      <div>로고</div>
+      <TiThMenu />
+      <HeaderText>COFFEE BEAN ☕️ </HeaderText>
       <UserFunction>
-        <img src="src/assets/img/ico_user_info_w_off_m.png" width={30} height={30} />
-        <img src="src/assets/img/ico_bag_m.png" width={30} height={30} />
+        <FaShoppingCart />
       </UserFunction>
     </Header>
   );
 };
+
+const HeaderText = styled.h3``;
 
 const Header = styled.header`
   display: flex;
@@ -23,7 +26,7 @@ const Header = styled.header`
 
 const UserFunction = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 10px;
 `;
 
 export default MobileHeader;
