@@ -15,9 +15,6 @@ const BannerSlide = () => {
     `${import.meta.env.VITE_PUBLIC_URL}/src/assets/img/carousel/MD_PC.jpg`,
   ];
 
-  console.log(`${import.meta.env.VITE_PUBLIC_URL}/src/assets/img/carousel/딸기_PC.jpg`);
-  console.log(`https://coffee-bean-fe.vercel.app/src/assets/img/carousel/딸기_PC.jpg`);
-
   const slidesMO = [
     `${import.meta.env.VITE_PUBLIC_URL}/src/assets/img/carousel/딸기_MO.jpg`,
     `${import.meta.env.VITE_PUBLIC_URL}/src/assets/img/carousel/MD_MO.jpg`,
