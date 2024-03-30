@@ -10,15 +10,11 @@ import { IoIosArrowDropleftCircle } from 'react-icons/io';
 import { IoIosArrowDroprightCircle } from 'react-icons/io';
 
 const BannerSlide = () => {
-  const slidesPC = [
-    `${import.meta.env.VITE_PUBLIC_URL}/src/assets/img/carousel/딸기_PC.jpg`,
-    `${import.meta.env.VITE_PUBLIC_URL}/src/assets/img/carousel/MD_PC.jpg`,
-  ];
+  const frontUrl = window.location.origin;
 
-  const slidesMO = [
-    `${import.meta.env.VITE_PUBLIC_URL}/src/assets/img/carousel/딸기_MO.jpg`,
-    `${import.meta.env.VITE_PUBLIC_URL}/src/assets/img/carousel/MD_MO.jpg`,
-  ];
+  const slidesPC = [`${frontUrl}/carousel/딸기_PC.jpg`, `${frontUrl}/carousel/MD_PC.jpg`];
+
+  const slidesMO = [`${frontUrl}/carousel/딸기_MO.jpg`, `${frontUrl}/carousel/MD_MO.jpg`];
 
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
