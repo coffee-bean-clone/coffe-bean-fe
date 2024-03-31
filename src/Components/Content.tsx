@@ -80,8 +80,8 @@ const MdPick = styled.h2`
 `;
 
 const StyledSwiperContainer = styled.div`
-  width: 80%; /* Swiper의 너비를 80%로 조정 */
-  margin: 0 auto; /* 가운데 정렬을 위해 margin 설정 */
+  width: 80%;
+  margin: 0 auto;
 `;
 
 const SlideTitle = styled.div`
@@ -89,7 +89,7 @@ const SlideTitle = styled.div`
 `;
 
 const SlideImg = styled.img`
-  width: 100%;
+  width: 80%;
 `;
 
 export default Content;
