@@ -9,6 +9,7 @@ import Store from './Pages/Store';
 import Recruit from './Pages/Recruit';
 import HeavyBuying from './Pages/HeavyBuying';
 import Service from './Pages/Service';
+import Join from './Pages/Join';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/recruit" element={<Recruit />} />
           <Route path="/heavybuying" element={<HeavyBuying />} />
           <Route path="/service" element={<Service />} />
+          <Route path="/join" element={<Join />} />
         </Routes>
       </Wrapper>
       <Footer>footer</Footer>
