@@ -10,6 +10,7 @@ import Recruit from './Pages/Recruit';
 import HeavyBuying from './Pages/HeavyBuying';
 import Service from './Pages/Service';
 import Join from './Pages/Join';
+import Footer from './Components/Footer';
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
           <Route path="/join" element={<Join />} />
         </Routes>
       </Wrapper>
-      <Footer>footer</Footer>
+      <Footer />
     </BrowserRouter>
   );
 }
@@ -39,8 +40,4 @@ const Wrapper = styled.div`
   position: relative; /* Wrapper를 relative로 설정 */
   padding-bottom: 50px; /* Footer 높이만큼 Wrapper의 하단 패딩 추가 */
   z-index: 999;
-`;
-
-const Footer = styled.div`
-  background-color: lightgray;
 `;
