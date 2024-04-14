@@ -1,15 +1,20 @@
 import styled from 'styled-components';
 import { BiSolidCoffeeBean } from 'react-icons/bi';
 import { FaSearch } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const InnerHeader = () => {
+  const navigate = useNavigate();
+
   return (
     <InnerMenu>
       <Inner>
-        <BiSolidCoffeeBean size={20} />
+        <Logo>
+          <BiSolidCoffeeBean size={20} onClick={() => navigate('/')} />
+        </Logo>
         <Menus>
           <ul>
-            <Menu href="">BUY ONLINE</Menu>
+            <Menu href="/store">BUY ONLINE</Menu>
           </ul>
           <ul>
             <Menu href="">MEMBER`S CLUB</Menu>
@@ -44,6 +49,10 @@ const Inner = styled.div`
   width: 90%;
   margin: 0 auto;
   align-items: center;
+`;
+
+const Logo = styled.div`
+  cursor: pointer;
 `;
 
 const Menus = styled.div`
