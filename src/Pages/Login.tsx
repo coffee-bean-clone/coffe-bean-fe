@@ -1,22 +1,61 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { UserDataType } from '../type/UserDataType';
+import { axiosInstance } from '../Hook/AxiosHook';
+import { useSetAtom } from 'jotai';
+import { IsLogined } from '../Atom/IsLogined';
+import { UserInfo } from '../Atom/UserInfo';
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const { register, handleSubmit } = useForm<UserDataType>();
+
+  const setIsLogined = useSetAtom(IsLogined);
+  const setUserInfo = useSetAtom(UserInfo);
+
+  const onSubmit = async (data: UserDataType) => {
+    const loginResult = await axiosInstance.post(`/users/login`, data);
+
+    if (loginResult.status === 201) {
+      navigate('/');
+      setIsLogined(true);
+      setUserInfo(loginResult.data);
+    } else {
+      alert('로그인에 실패했어요.');
+    }
+  };
 
   return (
     <LoginContainer>
       <LoginForm>
         <h4>Login</h4>
-        <Form>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <InfoInput>
             <Info>
               <Label htmlFor="email">이메일</Label>
-              <Input id="email" placeholder="이메일을 입력하세요." type="email" />
+              <Input
+                id="email"
+                placeholder="이메일을 입력하세요."
+                type="email"
+                {...register('email', {
+                  required: true,
+                  pattern: /^\S+@\S+$/i,
+                })}
+              />
             </Info>
             <Info>
               <Label htmlFor="password">비밀번호</Label>
-              <Input id="password" placeholder="비밀번호를 입력하세요." type="password" />
+              <Input
+                id="password"
+                placeholder="비밀번호를 입력하세요."
+                type="password"
+                {...register('password', {
+                  required: true,
+                  pattern: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/i,
+                })}
+              />
             </Info>
           </InfoInput>
           <Btns>
@@ -88,6 +127,7 @@ const Input = styled.input`
   border: none;
   border-bottom: 1px solid lightgray;
   padding: 5px 0px;
+  outline: none;
 
   @media only screen and (min-width: 768px) {
     width: 300px;
