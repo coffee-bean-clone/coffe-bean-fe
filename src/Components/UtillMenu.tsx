@@ -1,12 +1,26 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { IsLogined } from '../Atom/IsLogined';
+import { useAtomValue } from 'jotai';
+import { UserDataType } from '../type/UserDataType';
+import { UserInfo } from '../Atom/UserInfo';
 
 const UtillMenu = () => {
+  const isLogin = useAtomValue(IsLogined);
+  const userData = useAtomValue<UserDataType | null>(UserInfo);
+
+  const userName = userData?.name || '';
+
   return (
     <UtillHeader>
       <Lists>
         <List>
-          <Menu to="/login">로그인</Menu>
+          {isLogin ? (
+            <Menu to="/">안녕하세요, {userName}님!</Menu>
+          ) : (
+            <Menu to="/login">로그인</Menu>
+          )}
+
           <Menu to="/mypage">마이페이지</Menu>
           <Menu to="/store">매장 찾기</Menu>
           <Menu to="/recruit">채용 정보</Menu>
