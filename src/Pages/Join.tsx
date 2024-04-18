@@ -1,24 +1,39 @@
+import { axiosInstance } from '../Hook/AxiosHook';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { IsJoined } from '../Atom/IsJoined';
+import { IsLogined } from '../Atom/IsLogined';
+import { useSetAtom } from 'jotai';
+import { UserInfo } from '../Atom/UserInfo';
+import { UserDataType } from '../type/UserDataType';
 
 const Join = () => {
-  type Data = {
-    email: string;
-    confirmPassword: string;
-    password: string;
-    name: string;
-    phoneNum: string;
-    address: string;
-  };
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Data>();
+  } = useForm<UserDataType>();
 
-  const onSubmit = (data: Data) => console.log(data);
+  const setIsJoined = useSetAtom(IsJoined);
+  const setIsLogined = useSetAtom(IsLogined);
+  const setUserInfo = useSetAtom(UserInfo);
+
+  const onSubmit = async (data: UserDataType) => {
+    const joinResult = await axiosInstance.post(`/users/join`, data);
+
+    if (joinResult.status === 200) {
+      navigate('/');
+      setIsJoined(true);
+      setIsLogined(true);
+      setUserInfo(joinResult.data);
+    } else {
+      alert('회원가입에 실패했어요.');
+    }
+  };
 
   const password = watch('password');
 
@@ -130,21 +145,21 @@ const Join = () => {
               </div>
             </Info>
             <Info>
-              <Label htmlFor="phoneNum">휴대전화번호</Label>
+              <Label htmlFor="phoneNumber">휴대전화번호</Label>
               <div>
                 <Input
-                  id="phoneNum"
+                  id="phoneNumber"
                   type="text"
                   placeholder="000-0000-0000 형식으로 입력해주세요."
-                  {...register('phoneNum', {
+                  {...register('phoneNumber', {
                     required: true,
                     pattern: /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/,
                   })}
                 />
-                {errors.phoneNum && errors.phoneNum.type === 'required' && (
+                {errors.phoneNumber && errors.phoneNumber.type === 'required' && (
                   <InputAlert>이 칸을 입력해주세요.</InputAlert>
                 )}
-                {errors.phoneNum && errors.phoneNum.type === 'pattern' && (
+                {errors.phoneNumber && errors.phoneNumber.type === 'pattern' && (
                   <InputAlert>형식이 올바르지 않습니다.</InputAlert>
                 )}
               </div>
