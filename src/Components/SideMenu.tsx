@@ -1,17 +1,19 @@
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { SideMenuAtom } from '../Atom/SideMenuAtom';
 import styled, { css } from 'styled-components';
 import { useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { IsLogined } from '../Atom/IsLogined';
 
 interface SideMenubarProps {
   $isOpen: boolean;
 }
 
 const SideMenu = () => {
+  const isLogin = useAtomValue(IsLogined);
+
   const [isOpen, setIsOpen] = useAtom(SideMenuAtom);
   const sideMenuRef = useRef<HTMLDivElement | null>(null);
-  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setIsOpen(isOpen => !isOpen);
@@ -39,31 +41,31 @@ const SideMenu = () => {
     <SideMenubar ref={sideMenuRef} $isOpen={isOpen}>
       <Lists>
         <ListTitle>User</ListTitle>
-        <List onClick={() => navigate('/login')}>Login</List>
-        <List>Memebers</List>
-        <List>Point</List>
-        <List>Cart</List>
+        {isLogin ? <List to="/">Logout</List> : <List to="/login">Login</List>}
+        <List to="">Memebers</List>
+        <List to="">Point</List>
+        <List to="">Cart</List>
       </Lists>
       <Lists>
         <ListTitle>Info</ListTitle>
-        <List>Store</List>
-        <List>Notice</List>
-        <List>Recruit</List>
-        <List>Service</List>
+        <List to="/store">Store</List>
+        <List to="">Notice</List>
+        <List to="/recruit">Recruit</List>
+        <List to="/service">Service</List>
       </Lists>
       <Lists>
         <ListTitle>Shop</ListTitle>
-        <List>Sale</List>
-        <List>New</List>
-        <List>Coffee</List>
-        <List>Tea</List>
+        <List to="">Sale</List>
+        <List to="">New</List>
+        <List to="">Coffee</List>
+        <List to="">Tea</List>
       </Lists>
       <Lists>
         <ListTitle>Menu</ListTitle>
-        <List>Drink</List>
-        <List>Food</List>
-        <List>Goods</List>
-        <List>Cards</List>
+        <List to="">Drink</List>
+        <List to="">Food</List>
+        <List to="">Goods</List>
+        <List to="">Cards</List>
       </Lists>
       <CloseBtn onClick={toggleSidebar}>Close</CloseBtn>
     </SideMenubar>
@@ -103,13 +105,14 @@ const ListTitle = styled.div`
   height: 30px;
 `;
 
-const List = styled.li`
+const List = styled(Link)`
   list-style: none;
   color: white;
   text-align: center;
   font-size: 12px;
   cursor: pointer;
   padding: 5px 0px;
+  text-decoration: none;
 
   &:hover {
     color: darkorange;
