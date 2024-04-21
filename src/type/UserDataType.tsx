@@ -5,4 +5,6 @@ export type UserDataType = {
   name: string;
   phoneNumber: string;
   address: string;
+  detailAddress: string;
+  zipCode: string;
 };
