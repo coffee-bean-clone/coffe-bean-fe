@@ -1,7 +1,7 @@
 import './App.css';
 import Header from './Components/Header';
 import styled from 'styled-components';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import Main from './Pages/Main';
 import Login from './Pages/Login';
 import Mypage from './Pages/Mypage';
@@ -13,6 +13,10 @@ import Join from './Pages/Join';
 import Footer from './Components/Footer';
 
 function App() {
+  const Up = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <BrowserRouter>
       <Wrapper>
@@ -27,6 +31,11 @@ function App() {
           <Route path="/service" element={<Service />} />
           <Route path="/join" element={<Join />} />
         </Routes>
+        <UpButtonWrapper>
+          <UpButton to="#" onClick={Up}>
+            ⬆
+          </UpButton>
+        </UpButtonWrapper>
       </Wrapper>
       <Footer />
     </BrowserRouter>
@@ -36,8 +45,29 @@ function App() {
 export default App;
 
 const Wrapper = styled.div`
-  min-height: 100vh; /* 최소 높이 설정 */
-  position: relative; /* Wrapper를 relative로 설정 */
-  padding-bottom: 50px; /* Footer 높이만큼 Wrapper의 하단 패딩 추가 */
+  min-height: 100vh;
+  position: relative;
   z-index: 999;
+`;
+
+const UpButtonWrapper = styled.button`
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 50;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px #dadcdf, 0 4px 8px 0 rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const UpButton = styled(Link)`
+  position: relative;
+  text-decoration: none;
+  color: black;
 `;
