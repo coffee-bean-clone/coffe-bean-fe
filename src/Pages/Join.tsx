@@ -8,6 +8,18 @@ import { useSetAtom } from 'jotai';
 import { UserInfo } from '../Atom/UserInfo';
 import { UserDataType } from '../type/UserDataType';
 
+declare global {
+  interface Window {
+    daum: any;
+  }
+}
+
+interface IAddr {
+  [x: string]: string;
+  address: string;
+  zonecode: string;
+}
+
 const Join = () => {
   const navigate = useNavigate();
 
@@ -15,12 +27,17 @@ const Join = () => {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
-  } = useForm<UserDataType>();
+  } = useForm<UserDataType>({ mode: 'onChange' });
 
   const setIsJoined = useSetAtom(IsJoined);
   const setIsLogined = useSetAtom(IsLogined);
   const setUserInfo = useSetAtom(UserInfo);
+
+  const password = watch('password');
+  const addressRef = watch('address');
+  const zipCode = watch('zipCode');
 
   const onSubmit = async (data: UserDataType) => {
     const joinResult = await axiosInstance.post(`/users/join`, data);
@@ -35,7 +52,32 @@ const Join = () => {
     }
   };
 
-  const password = watch('password');
+  function handleAddressInput(data: IAddr) {
+    let addr = '';
+    if (data.userSelectedType === 'R') {
+      addr = data.roadAddress;
+    } else {
+      addr = data.jibunAddress;
+    }
+    (document.getElementById('sample6_postcode') as HTMLInputElement).value = data.zonecode;
+    (document.getElementById('address') as HTMLInputElement).value = addr;
+    document.getElementById('sample6_detailAddress')?.focus();
+
+    const detailAddress = (document.getElementById('sample6_detailAddress') as HTMLInputElement)
+      .value;
+
+    const zipCode = (document.getElementById('sample6_postcode') as HTMLInputElement).value;
+
+    setValue('address', addr);
+    setValue('detailAddress', detailAddress);
+    setValue('zipCode', zipCode);
+  }
+
+  const sample6_execDaumPostcode = () => {
+    new window.daum.Postcode({
+      oncomplete: handleAddressInput,
+    }).open();
+  };
 
   return (
     <JoinContainer>
@@ -126,24 +168,46 @@ const Join = () => {
             </Info>
             <Info>
               <Label htmlFor="address">주소</Label>
-              <div>
+              <AddressInfo>
                 <Input
-                  id="address"
                   type="text"
-                  placeholder="주소를 정확히 입력해주세요."
+                  id="address"
+                  placeholder="주소"
                   {...register('address', {
                     required: true,
-                    pattern: /^[가-힣0-9- ]+$/,
                   })}
                 />
-                {errors.address && errors.address.type === 'required' && (
+                {errors.address && errors.address.type === 'required' && !addressRef && (
                   <InputAlert>이 칸을 입력해주세요.</InputAlert>
                 )}
-                {errors.address && errors.address.type === 'pattern' && (
-                  <InputAlert>형식이 올바르지 않습니다.</InputAlert>
+                <div />
+                <AddressInput
+                  type="text"
+                  id="sample6_detailAddress"
+                  placeholder="상세주소"
+                  {...register('detailAddress')}
+                />
+                <AddressInput
+                  type="text"
+                  id="sample6_postcode"
+                  placeholder="우편번호"
+                  {...register('zipCode', {
+                    required: true,
+                  })}
+                />
+                {errors.zipCode && errors.zipCode.type === 'required' && !zipCode && (
+                  <InputAlert>이 칸을 입력해주세요.</InputAlert>
                 )}
-              </div>
+                <AddressButton
+                  type="button"
+                  onClick={sample6_execDaumPostcode}
+                  value="우편번호 찾기"
+                >
+                  우편번호 찾기
+                </AddressButton>
+              </AddressInfo>
             </Info>
+
             <Info>
               <Label htmlFor="phoneNumber">휴대전화번호</Label>
               <div>
@@ -237,6 +301,13 @@ const Input = styled.input`
   }
 `;
 
+const AddressInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const AddressInput = styled(Input)``;
+
 const InfoInput = styled.div`
   padding-bottom: 20px;
 `;
@@ -258,6 +329,10 @@ const JoinBtn = styled.button`
   @media only screen and (min-width: 768px) {
     width: auto;
   }
+`;
+
+const AddressButton = styled(JoinBtn)`
+  margin: 10px 0px;
 `;
 
 const InputAlert = styled.div`
