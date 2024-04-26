@@ -28,6 +28,7 @@ const Join = () => {
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<UserDataType>({ mode: 'onChange' });
 
@@ -40,15 +41,17 @@ const Join = () => {
   const zipCode = watch('zipCode');
 
   const onSubmit = async (data: UserDataType) => {
-    const joinResult = await axiosInstance.post(`/users/join`, data);
-
-    if (joinResult.status === 200) {
-      navigate('/');
-      setIsJoined(true);
-      setIsLogined(true);
-      setUserInfo(joinResult.data);
-    } else {
+    try {
+      const joinResult = await axiosInstance.post(`/users/join`, data);
+      if (joinResult.status === 200) {
+        navigate('/');
+        setIsJoined(true);
+        setIsLogined(true);
+        setUserInfo(joinResult.data);
+      }
+    } catch (error) {
       alert('회원가입에 실패했어요.');
+      reset();
     }
   };
 
