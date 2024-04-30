@@ -1,4 +1,4 @@
 import { atom } from 'jotai';
-import { UserDataType } from '../type/UserDataType';
+import { UserDataType } from '../util/UserDataType';
 
 export const UserInfo = atom<UserDataType | null>(null);

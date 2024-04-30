@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { UserDataType } from '../util/UserDataType';
+
 import { axiosInstance } from '../Hook/AxiosHook';
 import { useSetAtom } from 'jotai';
 import { IsLogined } from '../Atom/IsLogined';
 import { UserInfo } from '../Atom/UserInfo';
-import { CustomError } from '../util/ErrorType';
+
+import { UserDataType } from '../util/UserDataType';
+import { CustomError } from '../util/CustomError';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ const Login = () => {
         localStorage.setItem('Authorization', loginResult.data.token);
         setUserInfo(loginResult.data.userId);
       }
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof CustomError) {
         if (error.response?.status === 400) {
           alert('존재하지 않는 이메일입니다.');
