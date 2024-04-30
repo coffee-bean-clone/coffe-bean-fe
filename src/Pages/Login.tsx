@@ -1,29 +1,44 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { UserDataType } from '../type/UserDataType';
+import { UserDataType } from '../util/UserDataType';
 import { axiosInstance } from '../Hook/AxiosHook';
 import { useSetAtom } from 'jotai';
 import { IsLogined } from '../Atom/IsLogined';
 import { UserInfo } from '../Atom/UserInfo';
+import { CustomError } from '../util/ErrorType';
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const { register, handleSubmit } = useForm<UserDataType>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<UserDataType>();
 
   const setIsLogined = useSetAtom(IsLogined);
   const setUserInfo = useSetAtom(UserInfo);
 
   const onSubmit = async (data: UserDataType) => {
-    const loginResult = await axiosInstance.post(`/users/login`, data);
-
-    if (loginResult.status === 201) {
-      navigate('/');
-      setIsLogined(true);
-      setUserInfo(loginResult.data);
-    } else {
-      alert('로그인에 실패했어요.');
+    try {
+      const loginResult = await axiosInstance.post(`/auth/login`, data);
+      if (loginResult.status === 201) {
+        navigate('/');
+        setIsLogined(true);
+        localStorage.setItem('Authorization', loginResult.data.token);
+        setUserInfo(loginResult.data.userId);
+      }
+    } catch (error: unknown) {
+      if (error instanceof CustomError) {
+        if (error.response?.status === 400) {
+          alert('존재하지 않는 이메일입니다.');
+        } else if (error.response?.status === 401) {
+          alert('비밀번호가 일치하지 않습니다.');
+        }
+        reset();
+      }
     }
   };
 
@@ -35,27 +50,45 @@ const Login = () => {
           <InfoInput>
             <Info>
               <Label htmlFor="email">이메일</Label>
-              <Input
-                id="email"
-                placeholder="이메일을 입력하세요."
-                type="email"
-                {...register('email', {
-                  required: true,
-                  pattern: /^\S+@\S+$/i,
-                })}
-              />
+              <div>
+                <Input
+                  id="email"
+                  placeholder="이메일을 입력하세요."
+                  type="email"
+                  {...register('email', {
+                    required: true,
+                    pattern: /^\S+@\S+$/i,
+                  })}
+                />
+
+                {errors.email && errors.email.type === 'required' && (
+                  <InputAlert>이 칸을 입력해주세요.</InputAlert>
+                )}
+                {errors.email && errors.email.type === 'pattern' && (
+                  <InputAlert>형식이 올바르지 않습니다.</InputAlert>
+                )}
+              </div>
             </Info>
+
             <Info>
               <Label htmlFor="password">비밀번호</Label>
-              <Input
-                id="password"
-                placeholder="비밀번호를 입력하세요."
-                type="password"
-                {...register('password', {
-                  required: true,
-                  pattern: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/i,
-                })}
-              />
+              <div>
+                <Input
+                  id="password"
+                  placeholder="비밀번호를 입력하세요."
+                  type="password"
+                  {...register('password', {
+                    required: true,
+                    pattern: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,20}$/i,
+                  })}
+                />
+                {errors.password && errors.password.type === 'required' && (
+                  <InputAlert>이 칸을 입력해주세요.</InputAlert>
+                )}
+                {errors.password && errors.password.type === 'pattern' && (
+                  <InputAlert>형식이 올바르지 않습니다.</InputAlert>
+                )}
+              </div>
             </Info>
           </InfoInput>
           <Btns>
@@ -182,11 +215,24 @@ const Btns = styled.div`
   gap: 10px;
   padding: 10px 0px;
 
-  @media only screen and (min-width: 767px) {
+  @media only screen and (max-width: 767px) {
     width: 100%;
     margin: 0 auto;
     padding-top: 20px;
   }
+
+  @media only screen and (min-width: 768px) {
+    width: 100%;
+    margin: 0 auto;
+    padding-top: 20px;
+  }
+`;
+
+const InputAlert = styled.div`
+  color: red;
+  font-size: 12px;
+  padding: 5px 0px;
+  text-align: left;
 `;
 
 export default Login;
