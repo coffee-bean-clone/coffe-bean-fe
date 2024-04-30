@@ -6,7 +6,7 @@ import { IsJoined } from '../Atom/IsJoined';
 import { IsLogined } from '../Atom/IsLogined';
 import { useSetAtom } from 'jotai';
 import { UserInfo } from '../Atom/UserInfo';
-import { UserDataType } from '../type/UserDataType';
+import { UserDataType } from '../util/UserDataType';
 
 declare global {
   interface Window {
@@ -91,15 +91,19 @@ const Join = () => {
             <Info>
               <Label htmlFor="email">이메일</Label>
               <div>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="이메일 형식으로 입력해주세요."
-                  {...register('email', {
-                    required: true,
-                    pattern: /^\S+@\S+$/i,
-                  })}
-                />
+                <Email>
+                  <EmailInput
+                    id="email"
+                    type="email"
+                    placeholder="이메일 형식으로 입력해주세요."
+                    {...register('email', {
+                      required: true,
+                      pattern: /^\S+@\S+$/i,
+                    })}
+                  />
+                  <EmailConfirmBtn>확인</EmailConfirmBtn>
+                </Email>
+
                 {errors.email && errors.email.type === 'required' && (
                   <InputAlert>이 칸을 입력해주세요.</InputAlert>
                 )}
@@ -170,6 +174,29 @@ const Join = () => {
               </div>
             </Info>
             <Info>
+              <Label htmlFor="phoneNumber">휴대전화번호</Label>
+              <div>
+                <PhoneNumber>
+                  <PhoneNumberInput
+                    id="phoneNumber"
+                    type="text"
+                    placeholder="000-0000-0000 형식으로 입력해주세요."
+                    {...register('phoneNumber', {
+                      required: true,
+                      pattern: /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/,
+                    })}
+                  />
+                  <PhoneNumberConfirmBtn>확인</PhoneNumberConfirmBtn>
+                </PhoneNumber>
+                {errors.phoneNumber && errors.phoneNumber.type === 'required' && (
+                  <InputAlert>이 칸을 입력해주세요.</InputAlert>
+                )}
+                {errors.phoneNumber && errors.phoneNumber.type === 'pattern' && (
+                  <InputAlert>형식이 올바르지 않습니다.</InputAlert>
+                )}
+              </div>
+            </Info>
+            <Info>
               <Label htmlFor="address">주소</Label>
               <AddressInfo>
                 <Input
@@ -201,35 +228,10 @@ const Join = () => {
                 {errors.zipCode && errors.zipCode.type === 'required' && !zipCode && (
                   <InputAlert>이 칸을 입력해주세요.</InputAlert>
                 )}
-                <AddressButton
-                  type="button"
-                  onClick={sample6_execDaumPostcode}
-                  value="우편번호 찾기"
-                >
+                <AddressBtn type="button" onClick={sample6_execDaumPostcode} value="우편번호 찾기">
                   우편번호 찾기
-                </AddressButton>
+                </AddressBtn>
               </AddressInfo>
-            </Info>
-
-            <Info>
-              <Label htmlFor="phoneNumber">휴대전화번호</Label>
-              <div>
-                <Input
-                  id="phoneNumber"
-                  type="text"
-                  placeholder="000-0000-0000 형식으로 입력해주세요."
-                  {...register('phoneNumber', {
-                    required: true,
-                    pattern: /^[0-9]{3}-[0-9]{3,4}-[0-9]{4}$/,
-                  })}
-                />
-                {errors.phoneNumber && errors.phoneNumber.type === 'required' && (
-                  <InputAlert>이 칸을 입력해주세요.</InputAlert>
-                )}
-                {errors.phoneNumber && errors.phoneNumber.type === 'pattern' && (
-                  <InputAlert>형식이 올바르지 않습니다.</InputAlert>
-                )}
-              </div>
             </Info>
           </InfoInput>
           <JoinBtn type="submit">회원가입</JoinBtn>
@@ -293,6 +295,16 @@ const Info = styled.div`
   }
 `;
 
+const Email = styled.div`
+  display: flex;
+  gap: 5px;
+  width: 100%;
+
+  @media only screen and (min-width: 768px) {
+    width: 300px;
+  }
+`;
+
 const Input = styled.input`
   width: 100%;
   border: none;
@@ -303,6 +315,32 @@ const Input = styled.input`
     width: 300px;
   }
 `;
+
+const EmailInput = styled(Input)`
+  width: 100%;
+
+  @media only screen and (min-width: 768px) {
+    width: 300px;
+  }
+`;
+
+const EmailConfirmBtn = styled.button`
+  border: none;
+  background-color: orange;
+  padding: 0px 10px;
+  color: white;
+  width: 100px;
+
+  &:hover {
+    background-color: darkorange;
+  }
+`;
+
+const PhoneNumber = styled(Email)``;
+
+const PhoneNumberInput = styled(EmailInput)``;
+
+const PhoneNumberConfirmBtn = styled(EmailConfirmBtn)``;
 
 const AddressInfo = styled.div`
   display: flex;
@@ -334,7 +372,7 @@ const JoinBtn = styled.button`
   }
 `;
 
-const AddressButton = styled(JoinBtn)`
+const AddressBtn = styled(JoinBtn)`
   margin: 10px 0px;
 `;
 
