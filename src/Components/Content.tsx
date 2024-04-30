@@ -1,54 +1,43 @@
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { axiosInstance } from '../Hook/AxiosHook';
+import { useQuery } from 'react-query';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import { ProductType } from '../util/ProductType';
+import { axiosInstance } from '../Hook/AxiosHook';
 
-interface Product {
-  _id: string;
-  title: string;
-  price: number;
-  mainCategory: string;
-  subCategory: string;
-  isSale: boolean;
-  isNew: boolean;
-  detailImage: string;
-  productImages: string[];
-  createdAt: string;
-  __v: number;
-}
+const fetchNewProductData = async () => {
+  const { data } = await axiosInstance.get<ProductType[]>('/product/new');
+  return data;
+};
+
+const fetchSaleProductData = async () => {
+  const { data } = await axiosInstance.get<ProductType[]>('/product/sale');
+  return data;
+};
 
 const Content = () => {
-  const [newProductArr, setNewProductArr] = useState<Product[]>([]);
-  const [saleProductArr, setSaleProductArr] = useState<Product[]>([]);
+  const {
+    data: newProductArr,
+    isError: newProductIsError,
+    isLoading: newProductIsLoading,
+  } = useQuery('newProductArr', fetchNewProductData);
+  const {
+    data: saleProductArr,
+    isError: saleProductIsError,
+    isLoading: saleProductIsLoading,
+  } = useQuery('saleProductArr', fetchSaleProductData);
 
-  useEffect(() => {
-    const fetchNewProductData = async () => {
-      try {
-        const { data } = await axiosInstance.get<Product[]>(`/product/new`);
-        setNewProductArr(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchNewProductData();
-  }, []);
+  if (newProductIsLoading || saleProductIsLoading) {
+    return <div>Loading...</div>;
+  }
 
-  useEffect(() => {
-    const fetchSaleProductData = async () => {
-      try {
-        const { data } = await axiosInstance.get<Product[]>(`/product/sale`);
-        setSaleProductArr(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchSaleProductData();
-  }, []);
+  if (newProductIsError || saleProductIsError) {
+    return <div>Error</div>;
+  }
 
   return (
     <ContentContainer>
@@ -70,13 +59,14 @@ const Content = () => {
             modules={[Pagination, Autoplay]}
             spaceBetween={20}
           >
-            {newProductArr.map(product => (
-              <SwiperSlide key={product._id}>
-                <SlideImg src={product.productImages[0]} />
-                <SlideTitle>{product.title}</SlideTitle>
-                <SlideTitle>{product.price}원</SlideTitle>
-              </SwiperSlide>
-            ))}
+            {newProductArr &&
+              newProductArr.map(product => (
+                <SwiperSlide key={product._id}>
+                  <SlideImg src={product.productImages[0]} />
+                  <SlideTitle>{product.title}</SlideTitle>
+                  <SlideTitle>{product.price}원</SlideTitle>
+                </SwiperSlide>
+              ))}
           </Swiper>
         </StyledSwiperContainer>
       </ProductContent>
@@ -98,13 +88,14 @@ const Content = () => {
             modules={[Pagination, Autoplay]}
             spaceBetween={20}
           >
-            {saleProductArr.map(product => (
-              <SwiperSlide key={product._id}>
-                <SlideImg src={product.productImages[0]} />
-                <SlideTitle>{product.title}</SlideTitle>
-                <SlideTitle>{product.price}원</SlideTitle>
-              </SwiperSlide>
-            ))}
+            {saleProductArr &&
+              saleProductArr.map(product => (
+                <SwiperSlide key={product._id}>
+                  <SlideImg src={product.productImages[0]} />
+                  <SlideTitle>{product.title}</SlideTitle>
+                  <SlideTitle>{product.price}원</SlideTitle>
+                </SwiperSlide>
+              ))}
           </Swiper>
         </StyledSwiperContainer>
       </ProductContent>
