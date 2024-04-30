@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { IsLogined } from '../Atom/IsLogined';
 import { useAtomValue } from 'jotai';
-import { UserDataType } from '../type/UserDataType';
+import { UserDataType } from '../util/UserDataType';
 import { UserInfo } from '../Atom/UserInfo';
 
 const UtillMenu = () => {
@@ -57,15 +57,5 @@ const Menu = styled(Link)`
   color: inherit;
   padding-right: 15px;
 `;
-
-// const CoffeebeanIcon = styled.img`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: center;
-//   width: 30px;
-//   height: 30px;
-//   background-color: #401700;
-// `;
 
 export default UtillMenu;
